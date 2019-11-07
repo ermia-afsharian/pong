@@ -1,10 +1,8 @@
 import { SVG_NS} from '../settings';
 
 export default class Ball {
-    constructor(radius, x, y,boardWidth,boardHeight) {
+    constructor(radius,boardWidth,boardHeight) {
       this.radius = radius;
-      this.x = x;
-      this.y = y;
       this.boardWidth = boardWidth;
       this.boardHeight = boardHeight;
       this.direction = 1;
@@ -23,7 +21,21 @@ export default class Ball {
         }
         this.vx=this.direction * (6 - Math.abs(this.vy));
       }
-    render(svg){
+      wallCollision(){
+          if (this.y<0+ this.radius || this.y> this.boardHeight - this.radius) {
+              this.vy= - this.vy;} 
+      };
+      paddleCollision(p,pp){
+        const y1 = this.x<(p.x+ p.width + this.radius) && this.x>p.x && this.y>p.y && this.y < (p.y + p.height)
+        const y2 = this.x> (pp.x - this.radius) &&  this.x< (pp.x+ pp.width ) && this.y>pp.y && this.y < (pp.y + pp.height)
+
+        if (y1 || y2) {
+            this.vx= - this.vx;
+            
+          }
+      }
+
+    render(svg, p1 ,p2){
         const circle = document.createElementNS(SVG_NS, "circle");
         circle.setAttributeNS(null, "r", this.radius);
         circle.setAttributeNS(null, "cx", this.x);
@@ -31,6 +43,8 @@ export default class Ball {
         circle.setAttributeNS(null, "fill", "white");
         svg.appendChild(circle);
         this.ballMove();
+        this.wallCollision();
+        this.paddleCollision(p1,p2);
 
     }
   }
