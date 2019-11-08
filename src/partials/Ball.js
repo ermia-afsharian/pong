@@ -1,5 +1,5 @@
 import { SVG_NS} from '../settings';
-
+import pingSound from '../../public/sounds/pong-01.wav'
 export default class Ball {
     constructor(radius,boardWidth,boardHeight) {
       this.radius = radius;
@@ -7,6 +7,7 @@ export default class Ball {
       this.boardHeight = boardHeight;
       this.direction = 1;
       this.reset();
+      this.ping= new Audio (pingSound)
     }
     ballMove(){
         this.x+= this.vx;
@@ -21,17 +22,38 @@ export default class Ball {
         }
         this.vx=this.direction * (6 - Math.abs(this.vy));
       }
-      wallCollision(){
+      wallCollision(p,pp){
+        const hitLeft= this.x<0
+        const hitRight= this.x> this.boardWidth;
+
           if (this.y<0+ this.radius || this.y> this.boardHeight - this.radius) {
               this.vy= - this.vy;} 
+              if (hitLeft) {
+                this.direction=1
+                this.reset();
+                pp.increaseScore();
+              } else if(hitRight){
+                this.direction=-1
+                this.reset();
+                p.increaseScore();
+              }
       };
       paddleCollision(p,pp){
-        const y1 = this.x<(p.x+ p.width + this.radius) && this.x>p.x && this.y>p.y && this.y < (p.y + p.height)
-        const y2 = this.x> (pp.x - this.radius) &&  this.x< (pp.x+ pp.width ) && this.y>pp.y && this.y < (pp.y + pp.height)
-
-        if (y1 || y2) {
+        let hitWall , checkTop, checkBottom;
+              if (this.vx<0) {
+         hitWall =this.x<(p.x+ p.width + this.radius) && this.x>p.x;
+         checkBottom  =this.y < (p.y + p.height);
+         checkTop= this.y>p.y
+       } else {
+        hitWall =this.x> (pp.x - this.radius) && this.x<pp.x;
+        checkBottom  =this.y < (pp.y + pp.height);
+        checkTop= this.y>pp.y;
+       }
+        
+       if (hitWall && checkBottom && checkTop) {
             this.vx= - this.vx;
-            
+            this.direction= - this.direction;
+            this.ping.play();
           }
       }
 
@@ -43,7 +65,7 @@ export default class Ball {
         circle.setAttributeNS(null, "fill", "white");
         svg.appendChild(circle);
         this.ballMove();
-        this.wallCollision();
+        this.wallCollision(p1,p2);
         this.paddleCollision(p1,p2);
 
     }
