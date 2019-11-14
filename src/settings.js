@@ -5,7 +5,7 @@ export const  BOARD_WIDTH = 512;
 export const  PADDLE_WIDTH= 8;
 export const  PADDLE_HEIGHT= 56;
 export const  PADDLE_GAP= 10;
-export const  PADDLE_SPEED= 8;
+export const  PADDLE_SPEED= 5 ;
 export const  TEXT_SIZE =20;
 
 

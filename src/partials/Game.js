@@ -2,7 +2,7 @@ import { SVG_NS ,TEXT_SIZE, PADDLE_GAP ,PADDLE_SPEED, PADDLE_WIDTH , PADDLE_HEIG
 import Board from './Board';
 import Paddle from './Paddle';
 import Ball from './Ball';
-import Ball2 from './Ball';
+import { Ball2 } from './Ball';
 
 import Score from './Score';
 import Pausing from './Pausing';
@@ -23,10 +23,11 @@ export default class Game {
     this.ball= new Ball(BALL_RADIUS, BOARD_WIDTH , BOARD_HEIGHT,1);
     this.s1= new Score(this.width/2-60, 30 ,TEXT_SIZE);
     this.s2= new Score(this.width/2+50, 30 ,TEXT_SIZE);
-    this.ball2= new Ball2(BALL_RADIUS, BOARD_WIDTH , BOARD_HEIGHT,1);
+    this.ball2= new Ball2(BALL_RADIUS*2, BOARD_WIDTH , BOARD_HEIGHT,1);
     this.pausing = new Pausing(this.width, this.height);
     this.winner = new Winner(this.width, this.height,"");
-
+    this.j=Math.floor(Math.random() * 2);
+    this.toggle=1;
 
 
     // Other code goes here...
@@ -71,15 +72,19 @@ export default class Game {
     this.ball.render(svg, this.p1 ,this.p2);
 
 
-    if (this.p2.getScore()>2 && this.p1.getScore()>2 ) {
+        if (this.p2.getScore()> this.j  ) {
       this.ball2.render(svg, this.p1 ,this.p2);
-    
     };
+    if (this.p2.getScore()>1  && this.p1.getScore()>1 ) {
+      this.ball.radius=5;
+      
+        };
+    
 
-    if (this.p1.getScore()>1) {
+    if (this.p1.getScore()>10) {
         this.winner.w=" left"
       this.winner.render(svg);
-    } else if (this.p2.getScore()>1) {
+    } else if (this.p2.getScore()>10) {
       this.winner.w=" right"
       this.winner.render(svg);
     };    

@@ -8,31 +8,44 @@ export default class Paddle {
       this.boardHeight=boardHeight;
       this.score=0;
       this.speed= PADDLE_SPEED;
+      this.up= false;
+      this.down= false;
       document.addEventListener("keydown", event => {
         switch (event.key) {
           case upKey:
-            this.moveUp();
+            this.up=true
             break;
           case downKey:
-            this.moveDown();
+            this.down= true
+            break;
+        }
+      });
+      document.addEventListener("keyup", event => {
+        switch (event.key) {
+          case upKey:
+            this.up=false
+            break;
+          case downKey:
+            this.down= false
             break;
         }
       });
     }
 
     moveUp(){
-      
+      if (this. up) {
         this.y = Math.max((this.y-this.speed) , 0)
-      }
+      }}
     moveDown(){
+      if (this.down) {  
       this.y = Math.min((this.y+this.speed) , BOARD_HEIGHT - this.height)
 
-    }
+    }}
     increaseScore(){
       this.score+=1;
     }
     loseHeight(){
-      this.height=this.height/2;
+      this.height=this.height*3/4;
     };
     setSpeed(speed){
       this.speed= speed;
@@ -48,6 +61,8 @@ export default class Paddle {
         rect.setAttributeNS(null, "y", this.y);
         rect.setAttributeNS(null, "fill", "white");
         svg.appendChild(rect);
+        this.moveUp();
+        this.moveDown();
 
     }
   }
